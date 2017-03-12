@@ -119,6 +119,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <addResources>false</addResources>
+                    <outputDirectory>${war.output.dir}</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>

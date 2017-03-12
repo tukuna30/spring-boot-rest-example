@@ -1,0 +1,9 @@
+FROM maven:3.3.9-jdk-8-alpine
+
+# make source folder
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+# install maven packages
+COPY pom.xml /usr/src/app
+CMD ["mvn", "install"]

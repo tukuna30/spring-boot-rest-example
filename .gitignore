@@ -1,6 +1,7 @@
 *.DS_Store
 build/
 target/
+dist/*.war
 bin/
 dependency-reduced-pom.xml
 .classpath
