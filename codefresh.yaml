@@ -1,0 +1,37 @@
+version: '1.0'
+
+steps:
+
+  mvn_builder:
+    type: build
+    description: create Maven builder
+    dockerfile: Dockerfile.build
+    image-name: alexeiled/mvn-builder
+
+  mvn_test:
+    description: run unit tests 
+    image: ${{mvn_builder}}
+    commands:
+      - -T 1C -o test
+  
+   mvn_package:
+    description: package application WAR 
+    image: ${{mvn_builder}}
+    commands:
+      - package -T 1C -o -Dmaven.test.skip=true
+
+  build_image:
+    type: build
+    description: create Docker image with application WAR
+    dockerfile: Dockerfile
+    working-directory: ${{main_clone}}/target
+    image-name: alexeiled/sbdemo
+
+  docker_build:
+    title: push to DockerHub
+    type: push
+    candidate: '${{build_image}}'
+    tag: '${{CF_BRANCH}}'
+    credentials:
+      username: '${{DOCKER_USER}}'
+      password: '${{DOCKER_PASS}}'
