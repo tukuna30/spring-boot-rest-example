@@ -11,16 +11,14 @@ steps:
   mvn_test:
     description: run unit tests 
     image: ${{mvn_builder}}
-    entry_point: mvn
     commands:
-      - -T 1C -o test
+      - mvn -T 1C -o test
   
   mvn_package:
     description: package application WAR 
     image: ${{mvn_builder}}
-    entry_point: mvn
     commands:
-      - package -T 1C -o -Dmaven.test.skip=true
+      - mvn package -T 1C -o -Dmaven.test.skip=true
 
   build_image:
     type: build
