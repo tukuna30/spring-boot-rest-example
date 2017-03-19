@@ -6,17 +6,19 @@ steps:
     type: build
     description: create Maven builder
     dockerfile: Dockerfile.build
-    image-name: alexeiled/mvn-builder
+    image_name: alexeiled/mvn-builder
 
   mvn_test:
     description: run unit tests 
     image: ${{mvn_builder}}
+    entry_point: mvn
     commands:
       - -T 1C -o test
   
   mvn_package:
     description: package application WAR 
     image: ${{mvn_builder}}
+    entry_point: mvn
     commands:
       - package -T 1C -o -Dmaven.test.skip=true
 
@@ -24,8 +26,8 @@ steps:
     type: build
     description: create Docker image with application WAR
     dockerfile: Dockerfile
-    working-directory: ${{main_clone}}/target
-    image-name: alexeiled/sbdemo
+    working_directory: ${{main_clone}}/target
+    image_name: alexeiled/sbdemo
 
   docker_build:
     title: push to DockerHub
