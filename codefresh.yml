@@ -28,8 +28,8 @@ steps:
     image_name: alexeiled/sbdemo
 
   docker_build:
-    title: push to DockerHub
     type: push
+    description: push to DockerHub
     candidate: '${{build_image}}'
     tag: '${{CF_BRANCH}}'
     credentials:
