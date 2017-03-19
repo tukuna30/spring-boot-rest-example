@@ -14,7 +14,7 @@ steps:
     commands:
       - -T 1C -o test
   
-   mvn_package:
+  mvn_package:
     description: package application WAR 
     image: ${{mvn_builder}}
     commands:
