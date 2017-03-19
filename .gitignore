@@ -10,6 +10,7 @@ Thumbs.db
 dependency-reduced-pom.xml
 build/
 bin/
-target/
+!target/
+target/*
 !target/Dockerfile
 !target/.dockerignore
