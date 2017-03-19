@@ -6,13 +6,16 @@ REPO = sbdemo
 NAME = demo
 INSTANCE = default
 
-.PHONY: build push shell run start stop rm release
+.PHONY: builder mvn-package mvn-test docker build push shell run start stop rm release
 
 builder:
 	docker build -t builder:mvn -f Dockerfile.build .
 
-maven: builder
-	docker run -it --rm -v $(shell pwd):/usr/src/app -v $(HOME)/.m2:/root/.m2 --workdir /usr/src/app builder:mvn mvn package -Dwar.output.dir=dist -Dmaven.test.skip=true
+mvn-package: builder
+	docker run -it --rm -v $(shell pwd)/target:/usr/src/app/target builder:mvn package -T 1C -o -Dmaven.test.skip=true
+
+mvn-test: builder
+	docker run -it --rm -v $(shell pwd)/target:/usr/src/app/target builder:mvn -T 1C -o test
 
 docker: 
 	docker build -t $(NS)/$(REPO):$(VERSION) dist

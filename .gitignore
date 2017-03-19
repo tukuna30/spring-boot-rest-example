@@ -1,9 +1,4 @@
 *.DS_Store
-build/
-target/
-dist/*.war
-bin/
-dependency-reduced-pom.xml
 .classpath
 .project
 .settings/
@@ -12,3 +7,9 @@ dependency-reduced-pom.xml
 *.iws
 *.idea
 Thumbs.db
+dependency-reduced-pom.xml
+build/
+bin/
+target/
+!target/Dockerfile
+!target/.dockerignore
