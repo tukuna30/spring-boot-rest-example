@@ -27,7 +27,7 @@ steps:
     working_directory: ${{main_clone}}/target
     image_name: alexeiled/sbdemo
 
-  docker_build:
+  image_push:
     type: push
     description: push to DockerHub
     candidate: '${{build_image}}'

@@ -1,24 +1,24 @@
 include env_make
-NS = blog
+NS = sbdemo
 VERSION ?= latest
 
-REPO = sbdemo
+REPO = run
 NAME = demo
 INSTANCE = default
 
 .PHONY: builder mvn-package mvn-test docker build push shell run start stop rm release
 
 builder:
-	docker build -t builder:mvn -f Dockerfile.build .
+	docker build -t $(NS)/builder:mvn -f Dockerfile.build .
 
 mvn-package: builder
-	docker run -it --rm -v $(shell pwd)/target:/usr/src/app/target builder:mvn package -T 1C -o -Dmaven.test.skip=true
+	docker run -it --rm -v $(shell pwd)/target:/usr/src/app/target $(NS)/builder:mvn package -T 1C -o -Dmaven.test.skip=true
 
 mvn-test: builder
-	docker run -it --rm -v $(shell pwd)/target:/usr/src/app/target builder:mvn -T 1C -o test
+	docker run -it --rm -v $(shell pwd)/target:/usr/src/app/target $(NS)/builder:mvn -T 1C -o test
 
 docker: 
-	docker build -t $(NS)/$(REPO):$(VERSION) dist
+	docker build -t $(NS)/$(REPO):$(VERSION) target
 
 build: maven
 	make docker
