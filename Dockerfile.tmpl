@@ -1,0 +1,105 @@
+# README
+#
+# This template contains 3 files:
+# 1. 'Dockerfile.build' Maven Docker Builder image - use it to build and test Java application
+# 2. 'target/Dockerfile' Application Docker image - use it to run Java application
+# 3. 'codefresh.yml' - Codefresh automation pipeline
+# Customize these files to match your project structure and versions
+
+# ------------------------ Dockerfile.build ------------------------- 
+
+# Maven Docker Builder image: OpenJDK, Maven, app code, dependency
+# customize base JDK version here
+FROM openjdk:8-jdk-alpine
+
+RUN apk add --no-cache curl tar bash
+
+# you can set Maven version at build time using '--build-arg' option
+ENV MAVEN_VERSION=3.3.9
+ENV USER_HOME_DIR="/root"
+
+# download and install Maven
+RUN mkdir -p /usr/share/maven
+RUN curl -fsSL http://apache.osuosl.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar -xzC /usr/share/maven --strip-components=1
+RUN ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
+
+# set Maven config and home
+ENV MAVEN_HOME /usr/share/maven
+ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+
+# speed up Maven JVM a bit
+ENV MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+
+# Use maven script as main entrypoint
+ENTRYPOINT ["/usr/bin/mvn"]
+
+# make source folder
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+# install maven dependency packages (keep Maven cache in the image)
+COPY pom.xml /usr/src/app
+RUN mvn -T 1C install && rm -rf target
+
+# copy other source files (keep code snapshot in image)
+COPY src /usr/src/app/src
+
+# copy other files that you need ...
+
+
+
+# ------------------------ target/Dockerfile ------------------------- 
+# Create 'Dockerfile' file in 'target' directory, copy and uncomment code below 
+
+# customize base JDK version here
+# FROM openjdk:8-jre-alpine
+
+# copy Java application WAR file: package app bytecode and libs into single WAR
+# COPY *.war /app.war
+
+# default command to run Java application
+# CMD ["/usr/bin/java", "-jar", "/app.war"]
+
+
+
+# ------------------------ codefresh.yml -------------------------
+# Create 'codefresh.yml' file in project directory, copy and uncomment code below 
+
+# version: '1.0'
+
+# steps:
+
+#  mvn_builder:
+#    type: build
+#    description: create Maven builder
+#    dockerfile: Dockerfile.build
+#    image_name: builder
+
+#  mvn_test:
+#    description: run unit tests 
+#    image: \${{mvn_builder}}
+#    commands:
+#      - mvn -T 1C -o test
+  
+#  mvn_package:
+#    description: package application WAR 
+#    image: \${{mvn_builder}}
+#    commands:
+#      - mvn package -T 1C -o -Dmaven.test.skip=true
+
+#  build_image:
+#    type: build
+#    description: create Docker image with application WAR
+#    dockerfile: Dockerfile
+#    working_directory: \${{main_clone}}/target
+#    image_name: myapp
+
+#  image_push:
+#    type: push
+#    description: push myapp to DockerHub
+#    candidate: '\${{build_image}}'
+#    tag: '\${{CF_BRANCH}}'
+#    # set Docker credentials in Codefresh UI
+#    credentials:
+#      username: '\${{DOCKER_USER}}'
+#      password: '\${{DOCKER_PASS}}'

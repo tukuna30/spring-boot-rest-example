@@ -25,13 +25,10 @@ steps:
     description: create Docker image with application WAR
     dockerfile: Dockerfile
     working_directory: ${{main_clone}}/target
-    image_name: alexeiled/sbdemo
+    image_name: alexei-led/sbdemo
 
   image_push:
     type: push
     description: push to DockerHub
     candidate: '${{build_image}}'
     tag: '${{CF_BRANCH}}'
-    credentials:
-      username: '${{DOCKER_USER}}'
-      password: '${{DOCKER_PASS}}'

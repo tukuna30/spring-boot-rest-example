@@ -1,16 +1,19 @@
+# start from ubuntu
 FROM ubuntu:14.04
 
-MAINTAINER javacodegeeks
-
+# add required packages and java repository
 RUN apt-get update && apt-get install -y python-software-properties software-properties-common
 RUN add-apt-repository ppa:webupd8team/java
 
+# install Oracle JDK 8 with auto-accept license agreement
 RUN echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 boolean true" | debconf-set-selections
-
 RUN apt-get update && apt-get install -y oracle-java8-installer maven
 
+# add ALL project files
 ADD . /usr/local/app
 
+# build Java application with Maven (fetch packages, compile, test and deploy)
 RUN cd /usr/local/app && mvn install
 
+# define default command to run the application
 CMD ["/usr/bin/java", "-jar", "-Dspring.profiles.active=test", "/usr/local/app/target/spring-boot-rest-example-0.3.0.war"]
