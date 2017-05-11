@@ -20,7 +20,7 @@ mvn-test: builder
 docker: 
 	docker build -t $(NS)/$(REPO):$(VERSION) target
 
-build: maven
+build: builder
 	make docker
 
 push:
