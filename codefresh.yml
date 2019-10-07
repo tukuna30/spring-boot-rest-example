@@ -8,6 +8,12 @@ steps:
     repo: tukuna30/spring-boot-rest-example
     revision: blog
     git: github
+    
+  print_pwd_files:
+    title: 'Listing files'
+    image: alpine:latest
+    commands:
+      - 'ls -l'
 
   mvn_builder:
     type: build
