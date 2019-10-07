@@ -17,20 +17,20 @@ steps:
 
   mvn_builder:
     type: build
-    working_directory: "./"
+    working_directory: "./spring-boot-rest-example/"
     description: create Maven builder
     dockerfile: Dockerfile.build
     image_name: alexeiled/mvn-builder
 
   mvn_test:
-    working_directory: "./"
+    working_directory: "./spring-boot-rest-example"
     description: run unit tests 
     image: ${{mvn_builder}}
     commands:
       - mvn -T 1C -o test
   
   mvn_package:
-    working_directory: "./"
+    working_directory: "./spring-boot-rest-example"
     description: package application WAR 
     image: ${{mvn_builder}}
     commands:
@@ -40,7 +40,7 @@ steps:
     type: build
     description: create Docker image with application WAR
     dockerfile: Dockerfile
-    working_directory: ${{main_clone}}/target
+    working_directory: "./spring-boot-rest-example/target"
     image_name: alexei-led/sbdemo
 
   image_push:
