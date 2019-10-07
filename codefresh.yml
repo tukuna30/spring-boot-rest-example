@@ -5,8 +5,8 @@ steps:
   main_clone:
     title: 'Cloning repository to codefresh'
     type: git-clone
-    repo: tukuna30/spring-boot-test-example
-    revision: blog
+    repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+    revision: '${{CF_REVISION}}'
     git: github
 
   mvn_builder:
