@@ -31,7 +31,6 @@ steps:
       - mvn package -T 1C -o -Dmaven.test.skip=true
 
   build_image:
-    working_directory: "./"
     type: build
     description: create Docker image with application WAR
     dockerfile: Dockerfile
