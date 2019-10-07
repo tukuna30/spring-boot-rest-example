@@ -2,6 +2,13 @@ version: '1.0'
 
 steps:
 
+  main_clone:
+    title: 'Cloning repository to codefresh'
+    type: git-clone
+    repo: tukuna30/spring-boot-test-example
+    revision: blog
+    git: github
+
   mvn_builder:
     type: build
     description: create Maven builder
